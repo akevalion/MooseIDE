@@ -1,3 +1,14 @@
+"
+Represents one commit in git
+
+## Instance variables:
+- commit: hashtag of the commit
+- date: pharo date of the commit
+- classes: list of associations ""packageName -> className"" of the files modified in this commit
+
+## API
+- `#includes: aFamixClass`: checks whether this class was modified in the commit
+"
 Class {
 	#name : #MiGITHistoryCommit,
 	#superclass : #Object,

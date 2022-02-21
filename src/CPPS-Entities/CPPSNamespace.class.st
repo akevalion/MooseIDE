@@ -1,0 +1,75 @@
+"
+TODO
+"
+Class {
+	#name : #CPPSNamespace,
+	#superclass : #CPPSContainerEntity,
+	#traits : 'FamixTNamespace + FamixTWithClasses + FamixTWithFunctions + FamixTWithGlobalVariables',
+	#classTraits : 'FamixTNamespace classTrait + FamixTWithClasses classTrait + FamixTWithFunctions classTrait + FamixTWithGlobalVariables classTrait',
+	#instVars : [
+		'#childScopes',
+		'#parentScope'
+	],
+	#category : #'CPPS-Entities-Entities'
+}
+
+{ #category : #meta }
+CPPSNamespace class >> annotation [
+
+	<FMClass: #Namespace super: #CPPSContainerEntity>
+	<package: #'CPPS-Entities'>
+	<generated>
+	^self
+]
+
+{ #category : #display }
+CPPSNamespace class >> priority [
+	^ 450
+]
+
+{ #category : #adding }
+CPPSNamespace >> addChildScope: anObject [
+	<generated>
+	^ self childScopes add: anObject
+]
+
+{ #category : #accessing }
+CPPSNamespace >> childScopes [
+	"Relation named: #childScopes type: #CPPSNamespace opposite: #parentScope"
+
+	<generated>
+	<FMComment: 'Child scopes embedded in this scope, if any.'>
+	<derived>
+	^ childScopes
+]
+
+{ #category : #accessing }
+CPPSNamespace >> childScopes: anObject [
+
+	<generated>
+	childScopes value: anObject
+]
+
+{ #category : #accessing }
+CPPSNamespace >> parentScope [
+	"Relation named: #parentScope type: #CPPSNamespace opposite: #childScopes"
+
+	<generated>
+	<FMComment: 'Parent scope embedding this scope, if any.'>
+	<container>
+	^ parentScope
+]
+
+{ #category : #accessing }
+CPPSNamespace >> parentScope: anObject [
+
+	<generated>
+	parentScope := anObject
+]
+
+{ #category : #navigation }
+CPPSNamespace >> parentScopeGroup [
+	<generated>
+	<navigation: 'ParentScope'>
+	^ MooseGroup with: self parentScope
+]

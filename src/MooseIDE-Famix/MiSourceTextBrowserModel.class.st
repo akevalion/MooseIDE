@@ -90,6 +90,11 @@ MiSourceTextBrowserModel >> displayedText [
 	^displayedText
 ]
 
+{ #category : #accessing }
+MiSourceTextBrowserModel >> displayedText: aString [
+	displayedText := aString
+]
+
 { #category : #formatting }
 MiSourceTextBrowserModel >> formatSource [
 	displayedEntity sourceText
@@ -106,6 +111,7 @@ MiSourceTextBrowserModel >> formatSource: aString [
 
 { #category : #highlights }
 MiSourceTextBrowserModel >> gatherHighlights [
+
 	self displayedEntity children do: [ :child |
 		self gatherHighlightsForEntity: child
 	]
@@ -113,11 +119,12 @@ MiSourceTextBrowserModel >> gatherHighlights [
 
 { #category : #highlights }
 MiSourceTextBrowserModel >> gatherHighlightsForEntity: aChildEntity [
+"1haltIf: [ aChildEntity name = 'checkTimeIncrLAHT' ]."
 
 	self displayedEntity sourceAnchor
 	ifNotNil: [ :referenceAnchor |
-		(self identifierIntervalFor: aChildEntity inside: referenceAnchor)
-		ifNotNil: [ :childInterval | 
+		(self identifierIntervalsFor: aChildEntity inside: referenceAnchor)
+		do: [ :childInterval | 
 			self addIdentifierHighlightFor: aChildEntity interval: childInterval.
 			aChildEntity tags do: [ :childTag |
 				(self addTagHighlightFor: childTag interval: childInterval)
@@ -130,8 +137,8 @@ MiSourceTextBrowserModel >> gatherHighlightsForEntity: aChildEntity [
 		aChildEntity queryAllOutgoing do: [:mseAssoc |
 			mseAssoc allTargets do: [ :target |
 				target tags do: [ :assocTag |
-					(referenceAnchor textIntervalForChild: mseAssoc)
-					ifNotNil: [ :assocInterval |
+					(referenceAnchor textIntervalsForChild: mseAssoc)
+					do: [ :assocInterval |
 						self addTagHighlightFor: assocTag interval: assocInterval.
 					]
 				]
@@ -164,12 +171,13 @@ MiSourceTextBrowserModel >> highlights [
 ]
 
 { #category : #highlights }
-MiSourceTextBrowserModel >> identifierIntervalFor: aChildEntity inside: referenceAnchor [
+MiSourceTextBrowserModel >> identifierIntervalsFor: aChildEntity inside: referenceAnchor [
 	"returns the interval in #displayedText for the 1st line containing aChildEntity identifier
 	 referenceanchor is the anchor of the #displayedEntity and is used to find where aChildEntity
 	 is within #displayedText"
-	^(referenceAnchor textIntervalForChild: aChildEntity)
-	ifNotNil: [ :childInterval | | childStart |
+	referenceAnchor ifNil: [ ^#() ].
+	^(referenceAnchor textIntervalsForChild: aChildEntity)
+	collect: [ :childInterval | | childStart |
 		childStart := displayedText
 			findString: aChildEntity name
 			startingAt: childInterval first.

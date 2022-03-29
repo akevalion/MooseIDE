@@ -123,11 +123,11 @@ MiSourceTextBrowserModel >> gatherHighlightsForEntity: aChildEntity [
 
 	self displayedEntity sourceAnchor
 	ifNotNil: [ :referenceAnchor |
-		(self identifierIntervalsFor: aChildEntity inside: referenceAnchor)
+		(referenceAnchor textIntervalsForChild: aChildEntity)
 		do: [ :childInterval | 
 			self addIdentifierHighlightFor: aChildEntity interval: childInterval.
-			aChildEntity tags do: [ :childTag |
-				(self addTagHighlightFor: childTag interval: childInterval)
+			aChildEntity tags ifNotEmpty: [ :childTags |
+				(self addTagHighlightFor: childTags anyOne interval: childInterval)
 					restrictIntervalTo: aChildEntity name in: self displayedText.
 			]
 		].
@@ -143,49 +143,13 @@ MiSourceTextBrowserModel >> gatherHighlightsForEntity: aChildEntity [
 					]
 				]
 			]
-		].
-		"-- Not sure, but it may be that highlighting associations (just above) is enough --
-
-		aChildEntity outgoingMSEProperties do: [:prop |
-			prop isChildrenProperty ifFalse: [
-				prop isContainer ifFalse: [ 
-					(aChildEntity perform: (prop implementingSelector)) do: [ :assoc |
-						assoc allTargets do: [ :target |
-							target tags do: [ :assocTag |
-								(referenceAnchor textIntervalForChild: assoc)
-								ifNotNil: [ :assocInterval |
-									self addTagHighlightFor: assocTag interval: assocInterval.
-								]
-							]
-						]
-					]
-				]
-			]
-		]"
+		]
 	]
 ]
 
 { #category : #accessing }
 MiSourceTextBrowserModel >> highlights [
 	^highlights
-]
-
-{ #category : #highlights }
-MiSourceTextBrowserModel >> identifierIntervalsFor: aChildEntity inside: referenceAnchor [
-	"returns the interval in #displayedText for the 1st line containing aChildEntity identifier
-	 referenceanchor is the anchor of the #displayedEntity and is used to find where aChildEntity
-	 is within #displayedText"
-	referenceAnchor ifNil: [ ^#() ].
-	^(referenceAnchor textIntervalsForChild: aChildEntity)
-	collect: [ :childInterval | | childStart |
-		childStart := displayedText
-			findString: aChildEntity name
-			startingAt: childInterval first.
-
-		Interval
-			from: childStart
-			to: (childStart + aChildEntity name size - 1)
-  ]
 ]
 
 { #category : #initialization }

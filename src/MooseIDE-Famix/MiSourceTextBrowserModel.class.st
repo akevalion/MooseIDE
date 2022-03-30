@@ -30,6 +30,7 @@ MiSourceTextBrowserModel >> addErrorHighlightInterval: anInterval [
 
 { #category : #highlights }
 MiSourceTextBrowserModel >> addHighlight: aSourceTextHighlight [
+
 	highlights add: aSourceTextHighlight
 ]
 
@@ -82,7 +83,7 @@ MiSourceTextBrowserModel >> displayedEntity [
 MiSourceTextBrowserModel >> displayedEntity: anObject [
 	displayedEntity := anObject.
 	selectedEntity := anObject.
-	self formatSource 
+	self preformatDisplayedEntitySource 
 ]
 
 { #category : #accessing }
@@ -92,21 +93,7 @@ MiSourceTextBrowserModel >> displayedText [
 
 { #category : #accessing }
 MiSourceTextBrowserModel >> displayedText: aString [
-	displayedText := aString
-]
-
-{ #category : #formatting }
-MiSourceTextBrowserModel >> formatSource [
-	displayedEntity sourceText
-		ifEmpty: [ self noSourceCodeFor: displayedEntity ]
-		ifNotEmpty: [ :code | self formatSource: code ]
-
-]
-
-{ #category : #formatting }
-MiSourceTextBrowserModel >> formatSource: aString [
 	displayedText := aString.
-	self gatherHighlights
 ]
 
 { #category : #highlights }
@@ -152,19 +139,33 @@ MiSourceTextBrowserModel >> highlights [
 	^highlights
 ]
 
-{ #category : #initialization }
-MiSourceTextBrowserModel >> initialize [
-	super initialize.
-	
-	highlights := OrderedCollection new
-]
-
 { #category : #formatting }
 MiSourceTextBrowserModel >> noSourceCodeFor: anEntity [
 	displayedText := ('There is no source code to show for {1}'
 		format: { anEntity name }).
 
 	self addErrorHighlightInterval: (Interval from: 37 to: displayedText size)
+]
+
+{ #category : #formatting }
+MiSourceTextBrowserModel >> preformatDisplayedEntitySource [
+	self resetHighlights.
+	displayedEntity sourceText
+		ifEmpty: [ self noSourceCodeFor: displayedEntity ]
+		ifNotEmpty: [ :code | self preformatSource: code ]
+
+]
+
+{ #category : #formatting }
+MiSourceTextBrowserModel >> preformatSource: aString [
+	displayedText := aString.
+	self gatherHighlights
+]
+
+{ #category : #highlights }
+MiSourceTextBrowserModel >> resetHighlights [
+
+	highlights := OrderedCollection new
 ]
 
 { #category : #accessing }

@@ -77,7 +77,7 @@ MiSourceTextBrowserTest >> testHighlightChildNotIndexedAnchor [
 		
 	browser followEntity: entity.
 
-	self assert: browser textRenderer formatedText unembellished.
+	self assert: browser textRenderer preformatedText unembellished.
 ]
 
 { #category : #'tests - highlighting' }
@@ -96,7 +96,7 @@ MiSourceTextBrowserTest >> testHighlightChildWithIndexedFileAnchor [
 		
 	browser followEntity: entity.
 
-	displayedText := browser textRenderer formatedText.
+	displayedText := browser textRenderer preformatedText.
 	self deny: displayedText unembellished.
 	self assert: (displayedText attributesAt: 20) isEmpty.
 	self deny: (displayedText attributesAt: 30) isEmpty.
@@ -118,7 +118,7 @@ MiSourceTextBrowserTest >> testHighlightChildWithNoAnchor [
 		
 	browser followEntity: entity.
 
-	self assert: browser textRenderer formatedText unembellished.
+	self assert: browser textRenderer preformatedText unembellished.
 ]
 
 { #category : #'tests - highlighting' }
@@ -132,7 +132,7 @@ MiSourceTextBrowserTest >> testHighlightNoAnchor [
 		
 	browser followEntity: entity.
 
-	displayedText := browser textRenderer formatedText.
+	displayedText := browser textRenderer preformatedText.
 	self assert: displayedText equals: 'There is no source code to show for aClass'.
 	self deny: displayedText unembellished.
 	self deny: (displayedText attributesAt: (displayedText size)) isEmpty.
@@ -150,7 +150,7 @@ MiSourceTextBrowserTest >> testHighlightNoChild [
 		
 	browser followEntity: entity.
 	
-	self assert: browser textRenderer formatedText unembellished 
+	self assert: browser textRenderer preformatedText unembellished 
 ]
 
 { #category : #tests }

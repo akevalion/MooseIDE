@@ -50,9 +50,19 @@ MiDynamicTag >> description: anObject [
 { #category : #testing }
 MiDynamicTag >> isApplicableTo: anObject [
 
+	| queryList result currentQuery |
 	"The query should accept one parameter (anObject) and return a boolean."
-
-	^ (query runOn: anObject asMooseGroup) isNotEmpty
+	queryList := LinkedList new.
+	result := MooseGroup new
+		          add: anObject;
+		          yourself.
+	currentQuery := query.
+	[ currentQuery isNil ] whileFalse: [ 
+		queryList addFirst: currentQuery.
+		currentQuery := currentQuery parent ].
+	[ queryList isEmpty ] whileFalse: [ 
+		result := (currentQuery := queryList removeFirst) runOn: result ].
+	^ result isNotEmpty
 ]
 
 { #category : #testing }

@@ -73,7 +73,8 @@ MiQueriesBrowser >> browserClosed [
 MiQueriesBrowser >> canFollowEntity: anObject [
 
 	^ anObject isMooseObject and: [ 
-		  (anObject asMooseGroup allUsing: FamixTNamedEntity) isNotEmpty ]
+		  (anObject asMooseGroup allUsing: TEntityMetaLevelDependency)
+			  isNotEmpty ]
 ]
 
 { #category : #'api - actions' }
@@ -88,14 +89,16 @@ MiQueriesBrowser >> followEntity: anEntity [
 
 	| busMooseEntities |
 	"Create a group in case that only one entity was received from the bus"
-	busMooseEntities := anEntity asMooseGroup allUsing: FamixTNamedEntity.
-		
+	busMooseEntities := anEntity asMooseGroup allUsing:
+		                    TEntityMetaLevelDependency.
+
 	"Create the new root query"
 	self resetRootQueryForEntities: busMooseEntities.
 
 	"Update window's title"
-	self window
-		title: (self class titleForModelName: busMooseEntities first mooseModel name).
+	self window title:
+		(self class titleForModelName:
+			 busMooseEntities first mooseModel name).
 
 	"Update the all the sub presenters with this new query"
 	queriesListPresenter followNewEntity

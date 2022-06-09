@@ -70,6 +70,11 @@ MiAbstractBrowser class >> menuCommandOn: aBuilder [
 		icon: MooseIcons mooseIcon
 ]
 
+{ #category : #accessing }
+MiAbstractBrowser class >> menuIconName [
+	^''
+]
+
 { #category : #'world menu' }
 MiAbstractBrowser class >> menuMetaCommandOn: aBuilder [
 	"need to be a separate method because of #miBrowsers pragma"
